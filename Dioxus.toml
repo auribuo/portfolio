@@ -15,8 +15,9 @@ asset_dir = "assets"
 
 [web.app]
 base_path = "portfolio"
+
 # HTML title tag content
-title = "portfolio"
+title = "user@aureliobuonomo.it"
 
 [web.watcher]
 

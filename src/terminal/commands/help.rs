@@ -7,7 +7,7 @@ use crate::ui::themes::TerminalTheme;
 #[command(version, about, long_about = None)]
 pub(crate) struct Help;
 
-pub(crate) fn help(theme: TerminalTheme) -> String {
+pub(crate) fn help(theme: &TerminalTheme) -> String {
     format!(
         r#"
         <b style='{}'>Available commands:</b>
@@ -16,7 +16,8 @@ pub(crate) fn help(theme: TerminalTheme) -> String {
         - pwd <br />
         - cd <br />
         - ls <br />
-        - exit <br />
+        - theme <br />
+        - history <br />
         <br />
         Run [command] --help to get help for a specific command"#,
         theme.peach.style_text()

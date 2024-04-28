@@ -13,7 +13,7 @@ pub(crate) struct Ls;
 fn longest_size(entries: &Vec<LsResult>) -> usize {
     entries
         .iter()
-        .map(|lsr| lsr.size.map_or("-".to_string(), |x| x.to_string()).len())
+        .map(|lsr| lsr.size().map_or("-".to_string(), |x| x.to_string()).len())
         .max()
         .unwrap_or(1)
 }
@@ -35,10 +35,14 @@ fn pad(num: Option<u64>, max: usize) -> String {
     spaces + &str
 }
 
-fn format_name(name: &String, ty: &LsResultType, theme: TerminalTheme) -> String {
+fn format_name(name: &str, ty: &LsResultType, theme: &TerminalTheme) -> String {
     match ty {
         LsResultType::Directory => {
-            format!("<span style='{}'>{}</span>", theme.peach.style_text(), name)
+            format!(
+                "<span style='{}'>{}/</span>",
+                theme.peach.style_text(),
+                name
+            )
         }
         LsResultType::File => {
             format!("<span style='{}'>{}</span>", theme.text.style_text(), name)
@@ -53,8 +57,8 @@ fn format_name(name: &String, ty: &LsResultType, theme: TerminalTheme) -> String
     }
 }
 
-pub(crate) fn ls(filesystem: Filesystem, theme: TerminalTheme) -> String {
-    match filesystem.ls() {
+pub(crate) fn ls(filesystem: &Filesystem, theme: &TerminalTheme) -> String {
+    let res = match filesystem.ls() {
         Ok(entries) => {
             let max_n = longest_size(&entries);
             entries
@@ -62,13 +66,14 @@ pub(crate) fn ls(filesystem: Filesystem, theme: TerminalTheme) -> String {
                 .map(|entry| {
                     format!(
                         "{} {} {}",
-                        entry.permissions,
-                        pad(entry.size, max_n),
-                        format_name(&entry.name, &entry.ty, theme)
+                        entry.permissions(),
+                        pad(entry.size(), max_n),
+                        format_name(entry.name(), &entry.ty(), &theme)
                     )
                 })
                 .fold("".to_string(), |acc, e| acc + &e + "<br />")
         }
         Err(err) => err,
-    }
+    };
+    res
 }

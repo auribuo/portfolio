@@ -75,11 +75,15 @@ impl TerminalBuffer {
             }
             CommandResult::Pwd(pwd) => self
                 .commands
-                .push(CommandEntry::ok("pwd", EntryContent::Text(pwd))),
+                .push(CommandEntry::ok("pwd", EntryContent::Text(pwd.to_string()))),
             CommandResult::Cd(cmd) => self.commands.push(CommandEntry::no_output(&cmd)),
             CommandResult::Ls(ls) => self
                 .commands
                 .push(CommandEntry::ok("ls", EntryContent::Text(ls))),
+            CommandResult::Theme(cmd) => self.commands.push(CommandEntry::no_output(&cmd)),
+            CommandResult::History(cmd, history) => self
+                .commands
+                .push(CommandEntry::ok(&cmd, EntryContent::Text(history))),
             CommandResult::Failed(cmd, output) => self
                 .commands
                 .push(CommandEntry::err(&cmd, EntryContent::Text(output))),

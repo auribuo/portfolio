@@ -7,6 +7,6 @@ use crate::terminal::filesystem::Filesystem;
 #[command(version, about, long_about = None)]
 pub(crate) struct Pwd;
 
-pub(crate) fn pwd(filesystem: Filesystem) -> String {
+pub(crate) fn pwd(filesystem: &Filesystem) -> &'static str {
     filesystem.cwd()
 }
